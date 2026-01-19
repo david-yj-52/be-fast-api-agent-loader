@@ -1,7 +1,7 @@
 import logging
 import threading
 import time
-from typing import Dict, Callable
+from typing import Dict, Callable, Optional
 
 
 class ApPolingService:
@@ -11,7 +11,7 @@ class ApPolingService:
         self.running_status: Dict[str, bool] = {}
         self.logger = logging.getLogger("ApPolingService")
 
-    def start_task(self, task_name: str, interval: int, do_task: Callable):
+    def start_task(self, task_name: str, interval: int, do_task: Callable, on_result: Optional[Callable] = None):
         """ 특정 이름의 폴링 작업을 시작 """
         if task_name in self.threads and self.threads[task_name].is_alive():
             self.logger.warning(f"Task `{task_name}`은(는) 이미 실행 중입니다.")
@@ -20,13 +20,13 @@ class ApPolingService:
         self.running_status[task_name] = True
         thread = threading.Thread(
             target=self._run_loop,
-            args=(task_name, interval, do_task),
+            args=(task_name, interval, do_task, on_result),
             daemon=True,
             name=task_name
         )
         self.threads[task_name] = thread
         thread.start()
-        self.logger.info(f"Task `{task_name}` 시작됨 (주기: {interval}초")
+        self.logger.info(f"Task `{task_name}` 시작됨 (주기: {interval}초)")
 
     def stop_task(self, task_name: str):
         """ 특정 이름의 폴링 작어만 중지 """
@@ -48,11 +48,16 @@ class ApPolingService:
         for name in names:
             self.stop_task(name)
 
-    def _run_loop(self, task_name: str, interval: int, do_task: Callable):
+    def _run_loop(self, task_name: str, interval: int, do_task: Callable, on_result: Optional[Callable]):
         """ 각 스레드에서 실행될 루프 """
         while self.running_status.get(task_name, False):
             try:
-                do_task()
+                # 1. 작업 수행 및 응답 저장
+                result = do_task()
+                # 2. 결과 처리 콜백이 있다면 실행
+                if on_result:
+                    on_result(result)
+
             except Exception as e:
                 self.logger.warning(f"Task `{task_name}` 실행 중 오류: {e}")
 
