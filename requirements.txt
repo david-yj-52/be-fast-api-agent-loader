@@ -1,0 +1,47 @@
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.12.1
+click==8.3.1
+colorama==0.4.6
+h11==0.16.0
+idna==3.11
+pydantic==2.12.5
+pydantic_core==2.41.5
+starlette==0.50.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+
+# Web Framework
+fastapi==0.128.0
+uvicorn==0.40.0
+
+# Database (SQLite)
+sqlalchemy>=2.0.0
+aiosqlite
+
+# Git & File Operations
+GitPython
+aiofiles
+
+# Environment & Utils
+python-dotenv
+pydantic-settings
+python-multipart
+
+
+# SSL/TLS 대응
+cryptography
+trustme          # 테스트용 신뢰할 수 있는 인증서 생성 시 유용
+
+
+# Configuration & Utilities
+psutil          # 에이전트의 리소스 감시 및 프로세스 제어 (필요 시)
+
+# Build & Agent Features
+nuitka          # 실행 파일 빌드
+pystray         # 시스템 트레이 아이콘 (에이전트 종료/상태 확인용)
+Pillow          # 트레이 아이콘 이미지 처리
+
+# 통신 및 메시징
+requests        # 서버 API 통신 (버전 체크 및 파일 다운로드)
+pysolace        # Solace 메시지 브로커 연동 (또는 솔라스 공식 라이브러리인 'solace-pubsubplus')
