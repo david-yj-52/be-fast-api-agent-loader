@@ -1,7 +1,7 @@
 import logging
 from functools import partial
 
-from app.config.config_manager import ApSettings
+from app.config.config_manager import ConfigManager
 from app.constant.task_name import PollingTask
 from app.util.http_client import ApHttpClient
 from app.util.polling_client import ApPolingService
@@ -13,7 +13,7 @@ class AgentVersionCheckService:
         self.interval = 60
         self.polling_service = ApPolingService()
         self.logger = logging.getLogger("AgentVersionCheckService")
-        self.apSettings = ApSettings()
+        self.apSettings = ConfigManager()
 
     def start_task(self):
         httpCliet = ApHttpClient(self.apSettings.SERVER_BE_BASE_URL)

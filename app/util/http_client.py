@@ -4,7 +4,7 @@ import requests
 import urllib3.util.retry
 from requests.adapters import HTTPAdapter
 
-from app.config.config_manager import ApSettings
+from app.config.config_manager import ConfigManager
 
 
 class ApHttpClient:
@@ -63,7 +63,7 @@ class ApHttpClient:
 
 
 if __name__ == '__main__':
-    settings = ApSettings()
+    settings = ConfigManager()
     httpClient = ApHttpClient(base_url=settings.SERVER_BE_BASE_URL)
     try:
         response = httpClient.request("GET", "/health")

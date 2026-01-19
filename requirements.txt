@@ -45,3 +45,5 @@ Pillow          # 트레이 아이콘 이미지 처리
 # 통신 및 메시징
 requests        # 서버 API 통신 (버전 체크 및 파일 다운로드)
 pysolace        # Solace 메시지 브로커 연동 (또는 솔라스 공식 라이브러리인 'solace-pubsubplus')
+
+platformdirs # 멀티 플랫폼 대응 표준 앱 데이터 경로 찾아주는 라이브러리
