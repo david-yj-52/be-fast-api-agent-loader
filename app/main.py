@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from app.activator.service_start_activator import ServiceStartActivator
 from app.activator.service_stop_activator import ServiceStopActivator
@@ -19,15 +20,24 @@ settings = ConfigManager()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # [STARTUP] 어플리케이션 기동 시 실행
-    ServiceStartActivator().doStart()
+    await ServiceStartActivator().doStart()
 
     yield  # 서버가 기동되는 지점
 
     # [SHUTDOWN] 어플리케이션 중단 시 실행
-    ServiceStopActivator().doStop()
+    await ServiceStopActivator().doStop()
 
 
 app = FastAPI(lifespan=lifespan)
+
+# CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(health_router)
 
