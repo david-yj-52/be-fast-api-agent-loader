@@ -16,4 +16,4 @@ class ServiceStopActivator():
         self.pollingService = ApPolingService()
         self.pollingService.stop_all()
 
-        await db_helper.engine.close()
+        await db_helper.close()

@@ -1,6 +1,7 @@
 import logging
 import os
 
+from platformdirs import user_data_dir
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
@@ -15,9 +16,10 @@ class Base(DeclarativeBase):
 
 
 class DatabaseHelper:
-    def __init__(self, db_path: str):
+    def __init__(self):
         self.config = ConfigManager()
-        self.db_url = os.path.join(db_path, self.config.SQLITE_DB_NAME)
+        self.db_path = self._generate_db_path()
+        self.db_url = self._create_db_url()
 
         self.engine = self._create_engine()
         self.async_session_maker = async_sessionmaker(
@@ -31,6 +33,19 @@ class DatabaseHelper:
     def _create_engine(self) -> AsyncEngine:
         return create_async_engine(self.db_url, echo=True,
                                    connect_args={"check_same_thread": False} if "sqlite" in self.db_url else {})
+
+    def _create_db_url(self):
+        """SQLAlchemy URL 생성"""
+        # Windows 경로를 URL 형식으로 변환 (\ → /)
+        db_file_path = self.db_path.replace("\\", "/")
+
+        # SQLite async URL 형식
+        return f"sqlite+aiosqlite:///{db_file_path}"
+
+    def _generate_db_path(self):
+        self.app_path = user_data_dir()
+        return os.path.join(user_data_dir(), self.config.GRP_NAME, self.config.AP_NAME, self.config.AP_VERSION, "data",
+                            self.config.SQLITE_DB_NAME)
 
     async def get_db(self):
         async with self.async_session_maker() as session:

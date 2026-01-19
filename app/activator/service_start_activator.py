@@ -4,7 +4,7 @@ import os.path
 from platformdirs import user_data_dir
 
 from app.config.config_manager import ConfigManager
-from app.database.sqlite_session import engine, Base, db_helper
+from app.database.sqlite_session import Base, db_helper
 from app.service.agent_version_check_service import AgentVersionCheckService
 
 logger = logging.getLogger(__name__)
@@ -40,8 +40,11 @@ class ServiceStartActivator():
         if not os.path.exists(self.baseDir):
             os.makedirs(self.baseDir)
 
-        self.dbPath = os.path.join(self.baseDir, self.settings.SQLITE_DB_NAME)
-        logger.info(f"apDir: {self.appDir} baseDir: {self.baseDir} dbPath: {self.dbPath}")
+        self.data_path = os.path.join(self.baseDir, 'data')
+        if not os.path.exists(self.data_path):
+            os.makedirs(self.data_path)
+
+        logger.info(f"apDir: {self.appDir} baseDir: {self.baseDir} dataPath: {self.data_path}")
 
     async def _setup_database(self):
         async with db_helper.engine.begin() as conn:
