@@ -1,2 +1,7 @@
 .venv
 .idea
+
+# Inno Setup Secrets
+inno_setup/script/secrets.isi
+# Build results
+inno_setup/result/

@@ -47,6 +47,10 @@ class DatabaseHelper:
         return os.path.join(user_data_dir(), self.config.GRP_NAME, self.config.AP_NAME, self.config.AP_VERSION, "data",
                             self.config.SQLITE_DB_NAME)
 
+    async def close(self):
+        """엔진 종료 (lifespan에서 사용)"""
+        await self.engine.dispose()
+
     async def get_db(self):
         async with self.async_session_maker() as session:
             try:
@@ -54,12 +58,6 @@ class DatabaseHelper:
             except Exception as e:
                 logger.error(f"Database session error: {e}")
                 raise
-            finally:
-                await session.close()
-
-    async def close(self):
-        """엔진 종료 (lifespan에서 사용)"""
-        await self.engine.dispose()
 
 
 # 인스턴스화하여 다른 곳에서 공유

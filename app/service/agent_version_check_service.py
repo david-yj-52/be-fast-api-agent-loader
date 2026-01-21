@@ -18,7 +18,7 @@ class AgentVersionCheckService:
     def start_task(self):
         httpCliet = ApHttpClient(self.apSettings.SERVER_BE_BASE_URL)
 
-        do_task = partial(httpCliet.request, "GET", "/health")
+        do_task = partial(httpCliet.request, "GET", "/sample/hello")
         on_result = self.handle_response
 
         self.polling_service.start_task(task_name=self.task_name, interval=self.interval, do_task=do_task,
