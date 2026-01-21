@@ -9,9 +9,11 @@ from app.activator.service_start_activator import ServiceStartActivator
 from app.activator.service_stop_activator import ServiceStopActivator
 from app.config.config_manager import ConfigManager
 from app.controller.health_controller import router as health_router
+from app.util.logger import setup_logger
 
-# 로깅 설정
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# 1. 최상단에서 로깅 시스템 초기화 (이게 가장 먼저 와야 함)
+setup_logger()
+# 2. 현재 모듈을 위한 로거 생성
 logger = logging.getLogger("ApMain")
 
 settings = ConfigManager()

@@ -6,13 +6,14 @@ from app.constant.task_name import PollingTask
 from app.util.http_client import ApHttpClient
 from app.util.polling_client import ApPolingService
 
+logger = logging.getLogger(__name__)
+
 
 class AgentVersionCheckService:
     def __init__(self):
         self.task_name = PollingTask.VERSION_CHECK.name
         self.interval = 60
         self.polling_service = ApPolingService()
-        self.logger = logging.getLogger("AgentVersionCheckService")
         self.apSettings = ConfigManager()
 
     def start_task(self):
@@ -33,6 +34,6 @@ class AgentVersionCheckService:
         """ Polling 결과를 처리 """
         if response and response.status_code == 200:
             data = response.json()
-            self.logger.info(f"result:{data}")
+            logger.info(f"result:{data}")
         else:
-            self.logger.error("서버 응답이 올바르지 않습니다.")
+            logger.error("서버 응답이 올바르지 않습니다.")
