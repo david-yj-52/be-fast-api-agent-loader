@@ -3,13 +3,21 @@ import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
+from app.util.path_util import get_install_path
+
 
 def setup_logger():
-    # 1. 실행 파일(.exe) 또는 스크립트 위치 찾기
+    # 1. 경로 결정
     if getattr(sys, 'frozen', False):
-        base_path = Path(sys.executable).parent
+        # 실행 파일(.exe) 환경: 무조건 우리가 정의한 AppData 고정 경로 사용
+        # Nuitka가 sys.executable을 어디로 잡든 상관없이 get_base_dir()이 우선순위를 가집니다.
+        base_path = get_install_path()
     else:
-        base_path = Path(__file__).resolve().parent.parent.parent  # app/util 폴더 기준 상위로 이동
+        # 로컬 개발 환경: 기존처럼 프로젝트 루트 경로 사용
+        base_path = Path(__file__).resolve().parent.parent.parent
+
+    print(f"DEBUG: Executable Path: {sys.executable}")
+    print(f"DEBUG: Base Path: {base_path}")
 
     # 2. 로그 디렉토리 생성
     log_dir = base_path / "logs"

@@ -9,12 +9,6 @@ from app.activator.service_start_activator import ServiceStartActivator
 from app.activator.service_stop_activator import ServiceStopActivator
 from app.config.config_manager import ConfigManager
 from app.controller.health_controller import router as health_router
-from app.util.logger import setup_logger
-
-# 1. 최상단에서 로깅 시스템 초기화 (이게 가장 먼저 와야 함)
-setup_logger()
-# 2. 현재 모듈을 위한 로거 생성
-logger = logging.getLogger("ApMain")
 
 settings = ConfigManager()
 
@@ -22,6 +16,11 @@ settings = ConfigManager()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # [STARTUP] 어플리케이션 기동 시 실행
+    from app.util.logger import setup_logger
+    setup_logger()
+    # 2. 현재 모듈을 위한 로거 생성
+    logger = logging.getLogger("ApMain")
+    logger.info("Application starting up and logger initialized.")
     await ServiceStartActivator().doStart()
 
     yield  # 서버가 기동되는 지점

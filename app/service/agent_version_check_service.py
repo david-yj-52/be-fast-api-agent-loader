@@ -24,11 +24,11 @@ class AgentVersionCheckService:
 
         self.polling_service.start_task(task_name=self.task_name, interval=self.interval, do_task=do_task,
                                         on_result=on_result)
-        logging.info("Agent Version Check Service Started.")
+        logger.info("Agent Version Check Service Started.")
 
     def stop_task(self):
         self.polling_service.stop_task(task_name=self.task_name)
-        logging.info("Agent Version Check Service Stopped.")
+        logger.info(f"Agent Version Check Service Stopped. task:{self.task_name}")
 
     def handle_response(self, response):
         """ Polling 결과를 처리 """
