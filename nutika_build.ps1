@@ -1,6 +1,6 @@
 $nuitkaOptions = @(
     "--standalone",
-#     "--onefile", -- 보안 이슈를 위한 주석
+#     "--onefile", #-- 보안 이슈를 위한 주석
     "--mingw64",
     # --- 백그라운드 실행(nohup) 설정 ---
     "--windows-disable-console", # CMD 콘솔창이 뜨지 않게 설정
