@@ -23,7 +23,6 @@ class ConfigManager(BaseSettings):
     SQLITE_DB_NAME: str
 
     URI_PREFIX: str
-    AGENT_URI_PREFIX: str
 
     print(f"ENV_PATH: {ENV_PATH}")
     # .env 파일을 자동으로 읽어도록 설정 가능

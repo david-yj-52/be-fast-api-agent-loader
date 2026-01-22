@@ -12,7 +12,7 @@ class ServerBodyCommon(BaseModel):
 
 
 class ServerSysHealthCheckReq(ServerBodyCommon):
-    URI: ClassVar[str] = "/check/health"
+    URI: ClassVar[str] = "/sys_check/health"
     METHOD: ClassVar[str] = HttpRequestType.GET.name
 
     data: Optional[str] = Field(default=None, description="request without payload")

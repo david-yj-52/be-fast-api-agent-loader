@@ -3,7 +3,7 @@ from functools import partial
 
 from app.config.config_manager import ConfigManager
 from app.constant.task_name import PollingTask
-from app.model.interface.agent_interface_model import AgentSysHealthCheckReq
+from app.model.interface.agent_loader_interface_model import AGENT_SYS_HEALTH_CHECK_REQ
 from app.util.http_client import ApHttpClient
 from app.util.polling_client import ApPolingService
 
@@ -20,7 +20,7 @@ class AgentHealthCheckService:
     def start_task(self):
         http_client = ApHttpClient(self.apSettings.AGENT_BASE_URL)
 
-        do_task = partial(http_client.request, AgentSysHealthCheckReq)
+        do_task = partial(http_client.request, AGENT_SYS_HEALTH_CHECK_REQ)
         on_result = self.handle_respose
 
         self.polling_service.start_task(self.task_name, self.interval, do_task, on_result)
