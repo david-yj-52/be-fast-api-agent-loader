@@ -1,10 +1,16 @@
-from typing import Optional, Dict
+import logging
+from typing import Optional, Dict, TypeVar, Type
 
 import requests
 import urllib3.util.retry
+from pydantic import BaseModel
 from requests.adapters import HTTPAdapter
 
 from app.config.config_manager import ConfigManager
+from app.constant.ap_type import HttpRequestType
+
+logger = logging.getLogger(__name__)
+T = TypeVar('T', bound=BaseModel)
 
 
 class ApHttpClient:
@@ -13,8 +19,22 @@ class ApHttpClient:
         self.timeout = timeout
         self.session = self._generate_session(max_retries)
 
-    def request(self, method: str, endpoint: str, params: Optional[Dict] = None, data: Optional[Dict] = None,
-                json: Optional[Dict] = None, headers: Optional[Dict] = None, stream: bool = False) -> requests.Response:
+    def request(self, ivo_class: Type[T], params: Optional[Dict] = None, data: Optional[Dict] = None,
+                json: Optional[Dict] = None, headers: Optional[Dict] = None,
+                stream: bool = False) -> requests.Response:
+
+        # GET 요청일 때 enm 쿼리 파라미터 추가
+        if ivo_class.METHOD == HttpRequestType.GET.name:
+            # 기존 params에 enm 추가
+            if params is None:
+                params = {}
+            params['enm'] = ivo_class.__name__
+
+        return self._request(ivo_class.METHOD, ivo_class.URI, params, data, json, headers, stream)
+
+    def _request(self, method: str, endpoint: str, params: Optional[Dict] = None, data: Optional[Dict] = None,
+                 json: Optional[Dict] = None, headers: Optional[Dict] = None,
+                 stream: bool = False) -> requests.Response:
         url = f"{self.base_url}{endpoint}"
 
         try:
@@ -28,10 +48,14 @@ class ApHttpClient:
                 timeout=self.timeout,
                 stream=stream
             )
+
+            # 전체 URL 출력 (쿼리 파라미터 포함)
+            logger.debug(f"[Request] {method} {response.url}")
+
             response.raise_for_status()  # 4xx, 5xx 에러 시 예외 발생
             return response
         except requests.exceptions.HTTPError as e:
-            print(f"[HTTP Error] {method} {url} : {e}")
+            logger.error(f"[HTTP Error] {method} {url} : {e}")
             raise e
 
     def download_file(self, url: str, save_path: str):

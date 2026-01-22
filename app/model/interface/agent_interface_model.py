@@ -1,9 +1,14 @@
+from typing import ClassVar
+
 from pydantic import BaseModel, Field
 
-from app.constant.ap_type import AgentStatus
+from app.constant.ap_type import AgentStatus, HttpRequestType
 
 
 class AgentSysHealthCheckReq(BaseModel):
+    URI: ClassVar[str] = "/health"
+    METHOD: ClassVar[str] = HttpRequestType.GET.name
+
     data: str = Field(..., description="request without payload")
 
 

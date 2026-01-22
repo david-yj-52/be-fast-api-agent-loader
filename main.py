@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     await ServiceStopActivator().doStop()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, prefix=settings.URI_PREFIX)
 
 # CORS 설정
 app.add_middleware(

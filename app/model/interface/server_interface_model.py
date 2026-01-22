@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import Optional, ClassVar
 
 from pydantic import BaseModel, Field
 
-from app.constant.ap_type import InterfaceSystemType
-from app.model.interface.ApInterfaceVo import ApInterfaceVo
-from app.model.interface.common.ApHeadVo import HeadVo
+from app.constant.ap_type import InterfaceSystemType, HttpRequestType
+from app.model.interface.ap_head_vo import HeadVo
+from app.model.interface.ap_interface_vo import ApInterfaceVo
 
 
 class ServerBodyCommon(BaseModel):
@@ -12,6 +12,9 @@ class ServerBodyCommon(BaseModel):
 
 
 class ServerSysHealthCheckReq(ServerBodyCommon):
+    URI: ClassVar[str] = "/check/health"
+    METHOD: ClassVar[str] = HttpRequestType.GET.name
+
     data: Optional[str] = Field(default=None, description="request without payload")
 
 

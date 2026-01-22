@@ -16,3 +16,10 @@ class InterfaceSystemType(Enum):
     AGENT = "Agent"
     LOADER = "Loader"
     SERVER = "Server"
+
+
+class HttpRequestType(Enum):
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    DELETE = "DELETE"

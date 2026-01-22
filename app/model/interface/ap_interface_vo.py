@@ -2,7 +2,7 @@ from typing import TypeVar, Generic
 
 from pydantic import BaseModel
 
-from app.model.interface.common.ApHeadVo import HeadVo
+from app.model.interface.ap_head_vo import HeadVo
 
 T = TypeVar("T")
 
