@@ -6,7 +6,7 @@ from platformdirs import user_data_dir
 from app.config.config_manager import ConfigManager
 from app.config.sqlite_session import Base, db_helper
 from app.service.agent_health_check_service import AgentHealthCheckService
-from app.service.agent_lifetime_manage_service import AgentLifetimeManageService
+from app.service.agent_manager import AgentManager
 from app.service.agent_version_check_service import AgentVersionCheckService
 
 logger = logging.getLogger(__name__)
@@ -31,17 +31,7 @@ class ServiceStartActivator():
         logger.info("Start DB setup")
         await self._setup_database()
 
-        AgentLifetimeManageService()
-
-        # 1. AgentLifeTimeManager 시작
-        #   1. Agent 설치 확인 (DB, File 경로)
-        #   2. 존재 → Agent 기동
-        #   3. 부재 return False
-        # 2. AgentInstall Manager 시작
-        #   1. 서버 버전 요청
-        #   2. 서버 파일 요청
-        #   3. DB, File 생성
-        #   4. Agent 실행
+        await AgentManager().initialize()
 
     def _executePollingTask(self):
         self.versionCheck = AgentVersionCheckService()

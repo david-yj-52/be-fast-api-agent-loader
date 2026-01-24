@@ -12,6 +12,11 @@ class ServerBodyCommon(BaseModel):
     userId: str
 
 
+class ServerRepBodyCommon(ServerBodyCommon):
+    SRC: ClassVar[InterfaceSystemType] = InterfaceSystemType.SERVER
+    TGT: ClassVar[InterfaceSystemType] = InterfaceSystemType.LOADER
+
+
 class ServerReqBodyCommon(ServerBodyCommon):
     URI: ClassVar[str]
     METHOD: ClassVar[str]
@@ -58,7 +63,7 @@ class SERVER_DEPLOY_VER_REQ(ServerReqBodyCommon):
     userOsType: UserOsType = Field(..., description="user os type")
 
 
-class SERVER_DEPLOY_VER_REP(ServerBodyCommon):
+class SERVER_DEPLOY_VER_REP(ServerRepBodyCommon):
     URI: ClassVar[str] = "/deploy/version"
     METHOD: ClassVar[str] = HttpRequestType.GET.name
 

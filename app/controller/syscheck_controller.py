@@ -12,7 +12,9 @@ from app.dao.ln_dply_file_inf.ln_lcl_dply_file_inf_orm_service import LnDplyFile
 from app.model.agent_loader_interface_model import LOADER_SYS_HEALTH_CHECK_REP
 from app.model.cmn.ap_head_vo import generate_head_vo
 from app.model.cmn.ap_interface_vo import ApInterfaceVo
-from app.model.server_interface_model import SERVER_DEPLOY_FILE_REQ
+from app.model.server_interface_model import SERVER_DEPLOY_FILE_REQ, SERVER_DEPLOY_VER_REP
+from app.service.agent_manager import ask_server_deploy_version
+from app.service.deploy.agent_install_service import AgentInstallService
 from app.util.http_client import ApHttpClient
 from app.util.interface_uitl import convert_vo_into_dict
 from app.util.os_util import get_system_type
@@ -77,3 +79,25 @@ async def fetch_deploy_file_request():
 
     client = ApHttpClient()
     client.download_file(clz, "C:\\Users\\tspsc\\Downloads\\agent-download.zip", convert_vo_into_dict(req))
+
+
+@router.get("/deploy/version")
+async def fetch_deploy_version():
+    return ask_server_deploy_version()
+
+
+@router.get("/deploy/test/install")
+async def fetch_deploy_test():
+    ivo = SERVER_DEPLOY_VER_REP(
+        apGrpNm=settings.GRP_NAME,
+        apVersion="vtest",
+        apNm=InterfaceSystemType.AGENT,
+        userOsType=get_system_type(),
+        userId=InterfaceSystemType.LOADER.value,
+        siteId=settings.SITE_ID,
+    )
+    rep = ApInterfaceVo[SERVER_DEPLOY_VER_REP](
+        head=generate_head_vo(SERVER_DEPLOY_VER_REP),
+        body=ivo
+    )
+    await AgentInstallService(rep).start_install()

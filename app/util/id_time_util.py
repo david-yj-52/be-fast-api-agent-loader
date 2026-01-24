@@ -10,7 +10,7 @@ def generate_tid():
 
 
 def generate_id(prefix: str):
-    return prefix + "_" + generate_obj_id()
+    return prefix + "-" + _generate_unique_id()
 
 
 def _generate_unique_id():

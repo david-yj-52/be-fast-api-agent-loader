@@ -2,14 +2,14 @@
 
 from typing import Optional
 
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.ln_dply_file_inf.ln_lcl_dply_file_inf import LnDplyFileInf
 from app.dao.ln_dply_file_inf.ln_lcl_dply_file_inf_repository import LnDplyFileInfRepository
 
 
 class LnDplyFileInfOrmService:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.repo = LnDplyFileInfRepository(db)
         self.db = db
 
@@ -17,11 +17,13 @@ class LnDplyFileInfOrmService:
 
         try:
             self.repo.save_entity(entity)
+            await self.db.flush()
+            
             self.repo.save_history(entity)
 
-            self.db.commit()
+            await self.db.commit()
         except Exception as e:
-            self.db.rollback()
+            await self.db.rollback()
             raise e
 
     async def get_deployment_info(self, site_id: str, grp_nm: str, ap_nm: str) -> Optional[LnDplyFileInf]:

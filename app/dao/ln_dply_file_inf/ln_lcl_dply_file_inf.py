@@ -10,6 +10,7 @@ from app.dao.cmn.default_model_mixin import DefaultModelMixin
 class LhDplyFileInf(Base, DefaultModelMixin):
     __tablename__ = LoaderTableName.LH_LCL_DPLY_FILE_INF.value
 
+    ref_obj_id: Mapped[str] = mapped_column(String(100), nullable=False)
     ap_grp_nm: Mapped[str] = mapped_column(String(40), nullable=False)
     ap_nm: Mapped[InterfaceSystemType] = mapped_column(Enum(InterfaceSystemType, native_enum=False), nullable=False)
     ap_version: Mapped[str] = mapped_column(String(40), nullable=False)

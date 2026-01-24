@@ -1,5 +1,6 @@
 import logging
 import os
+from contextlib import asynccontextmanager
 
 from platformdirs import user_data_dir
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine, async_sessionmaker
@@ -58,6 +59,20 @@ class DatabaseHelper:
             except Exception as e:
                 logger.error(f"Database session error: {e}")
                 raise
+
+    @asynccontextmanager
+    async def async_session(self):
+        """서비스 레이어에서 'async with'로 세션을 열 때 사용"""
+        async with self.async_session_maker() as session:
+            try:
+                yield session
+                # 팁: 여기서 commit을 자동으로 하게 할 수도 있지만,
+                # 현재 구조상 서비스 레이어에서 직접 commit 하시는 게 좋습니다.
+            except Exception as e:
+                await session.rollback()
+                raise e
+            finally:
+                await session.close()
 
 
 # 인스턴스화하여 다른 곳에서 공유
