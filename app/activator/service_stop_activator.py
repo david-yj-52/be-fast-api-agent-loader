@@ -1,6 +1,6 @@
 import logging
 
-from app.database.sqlite_session import db_helper
+from app.config.sqlite_session import db_helper
 from app.util.polling_client import ApPolingService
 
 logger = logging.getLogger(__name__)

@@ -11,10 +11,11 @@ from app.constant.ap_type import HttpRequestType
 
 logger = logging.getLogger(__name__)
 T = TypeVar('T', bound=BaseModel)
+settings = ConfigManager()
 
 
 class ApHttpClient:
-    def __init__(self, base_url: str = "", timeout: int = 10, max_retries: int = 3):
+    def __init__(self, base_url: str = settings.SERVER_BE_BASE_URL, timeout: int = 10, max_retries: int = 3):
         self.base_url = base_url
         self.timeout = timeout
         self.session = self._generate_session(max_retries)
@@ -58,9 +59,9 @@ class ApHttpClient:
             logger.error(f"[HTTP Error] {method} {url} : {e}")
             raise e
 
-    def download_file(self, url: str, save_path: str):
+    def download_file(self, ivo_class: Type[T], save_path: str, json: Optional[Dict] = None):
         """ 대용량 파일(에이전트 패치 파일 등) 다운로드 용 """
-        with self.request("GET", url, stream=True) as response:
+        with self.request(ivo_class, stream=True, json=json) as response:
             with open(save_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:

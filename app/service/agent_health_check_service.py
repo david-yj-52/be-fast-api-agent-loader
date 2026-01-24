@@ -3,7 +3,7 @@ from functools import partial
 
 from app.config.config_manager import ConfigManager
 from app.constant.task_name import PollingTask
-from app.model.interface.agent_loader_interface_model import AGENT_SYS_HEALTH_CHECK_REQ
+from app.model.agent_loader_interface_model import AGENT_SYS_HEALTH_CHECK_REQ
 from app.util.http_client import ApHttpClient
 from app.util.polling_client import ApPolingService
 

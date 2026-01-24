@@ -9,6 +9,7 @@ ENV_PATH = BASE_DIR / ".env"
 
 class ConfigManager(BaseSettings):
     # !. env에 항목 추가 시 필드 정의 추가 필수
+    SITE_ID: str
     GRP_NAME: str
     AP_NAME: str
     AP_VERSION: str
