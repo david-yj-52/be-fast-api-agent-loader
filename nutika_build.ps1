@@ -17,6 +17,8 @@ $nuitkaOptions = @(
     "--include-package=pydantic_core",
     "--include-data-file=.env=.env",
     "--output-dir=build",
+    "--windows-icon-from-ico=asset/ts_logo_32x32.ico"
+    "--output-filename=tsh-agent-loader"
     "main.py"
 )
 

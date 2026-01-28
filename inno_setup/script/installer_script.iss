@@ -1,10 +1,10 @@
 #include "secrets.isi"
 
 #define MyAppName "TSH-AGENT-LOADER"
-#define MyAppVersion "1.0.11"
+#define MyAppVersion "1.0.12"
 #define MyAppPublisher "TSHInc"
 #define MyAppURL "https://service.tongsung.site/"
-#define MyAppExeName "main.exe"
+#define MyAppExeName "tsh-agent-loader.exe"
 #define MyAppAssocName MyAppName + " File"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
